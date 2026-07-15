@@ -1,4 +1,0 @@
-interface:
-  display_name: "Bee Static 上传"
-  short_description: "上传前检查 CDN 重名并安全提交 bee-static 资源"
-  default_prompt: "Use $bee-static-upload to check CDN name collisions, confirm the upload plan, and safely publish selected assets."

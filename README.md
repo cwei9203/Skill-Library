@@ -17,9 +17,9 @@
 
 仓库目前聚合：
 
-- 17 个自定义技能，位于 `skills/local/`。
+- 1 个自定义技能，位于 `skills/local/`。
 - 27 个 Lark/Feishu 第三方技能，来自 1 个 GitHub 仓库。
-- 共 44 个统一技能入口，位于 `enabled/`。
+- 共 28 个统一技能入口，位于 `enabled/`。
 
 第三方来源、对应仓库和官方安装命令见 [SOURCES.md](SOURCES.md)。该文件由脚本根据 `registry.json` 自动生成。
 
@@ -30,7 +30,7 @@
 - Lark/Feishu 技能依赖官方 CLI、API 和持续更新的产品能力，因此保留 `larksuite/cli` 作为唯一第三方 submodule。
 - 通用开发流程不再聚合多个第三方技能套件，避免需求访谈、规划、实现、测试和评审规则重复触发。
 - 开发工作流由本仓库中的 `development-workflow` 自行维护，便于按照个人习惯持续调整，并保证不同 Agent 使用同一套执行原则。
-- 具体项目和领域能力继续放在 `skills/local/`，不会为了获得单个技能而引入一整套相互依赖的工作流。
+- `skills/local/` 当前只保留这一项开发工作流；原有设计、前端、文档、基础设施和质量技能均已移除。
 
 ### `development-workflow`
 
@@ -54,7 +54,7 @@
 清晰交付
 ```
 
-设计上不绑定 Claude、Codex 或其他平台的专用工具名，不强制所有任务创建计划文件，也不要求简单修改机械执行完整 TDD。其他本地领域技能可以补充专业规则，但不替代这条主流程。
+设计上不绑定 Claude、Codex 或其他平台的专用工具名，不强制所有任务创建计划文件，也不要求简单修改机械执行完整 TDD。以后如需增加个人领域技能，应保持职责单一，并避免与这条主流程重复。
 
 ## 工作原理
 
@@ -133,12 +133,8 @@ Skill-Library/
 ├── SOURCES.md                      # 自动生成：第三方来源和恢复命令
 ├── skills/
 │   └── local/                      # 自己维护的技能
-│       ├── design/
-│       ├── documentation/
-│       ├── frontend/
-│       ├── infrastructure/
-│       ├── quality/
 │       └── workflow/
+│           └── development-workflow/
 ├── upstreams/                      # 第三方 Git submodules
 │   └── larksuite-cli/              # 唯一保留的第三方技能仓库
 ├── scripts/
