@@ -1,0 +1,20 @@
+[submodule "upstreams/larksuite-cli"]
+	path = upstreams/larksuite-cli
+	url = https://github.com/larksuite/cli.git
+	branch = main
+	shallow = true
+[submodule "upstreams/addyosmani-agent-skills"]
+	path = upstreams/addyosmani-agent-skills
+	url = https://github.com/addyosmani/agent-skills.git
+	branch = main
+	shallow = true
+[submodule "upstreams/vercel-labs-skills"]
+	path = upstreams/vercel-labs-skills
+	url = https://github.com/vercel-labs/skills.git
+	branch = main
+	shallow = true
+[submodule "upstreams/planning-with-files"]
+	path = upstreams/planning-with-files
+	url = https://github.com/OthmanAdi/planning-with-files.git
+	branch = master
+	shallow = true
