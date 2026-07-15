@@ -40,58 +40,6 @@
         "lark-workflow-meeting-summary",
         "lark-workflow-standup-report"
       ]
-    },
-    {
-      "id": "addyosmani-agent-skills",
-      "title": "Production Engineering Agent Skills",
-      "url": "https://github.com/addyosmani/agent-skills.git",
-      "checkout": "upstreams/addyosmani-agent-skills",
-      "skillRoots": ["skills"],
-      "installCommand": "npx skills add addyosmani/agent-skills -y -g",
-      "include": [
-        "api-and-interface-design",
-        "browser-testing-with-devtools",
-        "ci-cd-and-automation",
-        "code-review-and-quality",
-        "code-simplification",
-        "context-engineering",
-        "debugging-and-error-recovery",
-        "deprecation-and-migration",
-        "documentation-and-adrs",
-        "doubt-driven-development",
-        "frontend-ui-engineering",
-        "git-workflow-and-versioning",
-        "idea-refine",
-        "incremental-implementation",
-        "interview-me",
-        "observability-and-instrumentation",
-        "performance-optimization",
-        "planning-and-task-breakdown",
-        "security-and-hardening",
-        "shipping-and-launch",
-        "source-driven-development",
-        "spec-driven-development",
-        "test-driven-development",
-        "using-agent-skills"
-      ]
-    },
-    {
-      "id": "vercel-labs-skills",
-      "title": "Vercel Agent Skills",
-      "url": "https://github.com/vercel-labs/skills.git",
-      "checkout": "upstreams/vercel-labs-skills",
-      "skillRoots": ["skills"],
-      "installCommand": "npx skills add vercel-labs/skills --skill find-skills -y -g",
-      "include": ["find-skills"]
-    },
-    {
-      "id": "planning-with-files",
-      "title": "Planning with Files",
-      "url": "https://github.com/OthmanAdi/planning-with-files.git",
-      "checkout": "upstreams/planning-with-files",
-      "skillRoots": ["skills"],
-      "installCommand": "npx skills add OthmanAdi/planning-with-files --skill planning-with-files-zh -y -g",
-      "include": ["planning-with-files-zh"]
     }
   ]
 }

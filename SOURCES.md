@@ -5,9 +5,6 @@
 | 分组 | 上游仓库 | 本仓库路径 | 官方/兼容安装命令 |
 |---|---|---|---|
 | Lark/Feishu CLI Skills | [larksuite-cli](https://github.com/larksuite/cli) | `upstreams/larksuite-cli` | `npx skills add larksuite/cli -y -g` |
-| Production Engineering Agent Skills | [addyosmani-agent-skills](https://github.com/addyosmani/agent-skills) | `upstreams/addyosmani-agent-skills` | `npx skills add addyosmani/agent-skills -y -g` |
-| Vercel Agent Skills | [vercel-labs-skills](https://github.com/vercel-labs/skills) | `upstreams/vercel-labs-skills` | `npx skills add vercel-labs/skills --skill find-skills -y -g` |
-| Planning with Files | [planning-with-files](https://github.com/OthmanAdi/planning-with-files) | `upstreams/planning-with-files` | `npx skills add OthmanAdi/planning-with-files --skill planning-with-files-zh -y -g` |
 
 当前固定版本可通过以下命令查看：
 

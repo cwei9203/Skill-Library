@@ -1,6 +1,6 @@
 # Skill Library
 
-个人 AI Code Agent 技能聚合仓库。它把自己维护的技能和来自 GitHub 的第三方技能统一收纳、固定版本、按清单启用，再通过软链接提供给 Claude Code、Codex、OpenCode、Pi、Cursor 等支持 Agent Skills 目录的工具。
+个人 AI Code Agent 技能聚合仓库。它把自己维护的技能与单独保留的 Lark/Feishu 第三方技能统一收纳、固定版本、按清单启用，再通过软链接提供给 Claude Code、Codex、OpenCode、Pi、Cursor 等支持 Agent Skills 目录的工具。
 
 这个仓库主要解决以下问题：
 
@@ -17,11 +17,44 @@
 
 仓库目前聚合：
 
-- 16 个自定义技能，位于 `skills/local/`。
-- 53 个已启用的第三方技能，来自 4 个 GitHub 仓库。
-- 共 69 个统一技能入口，位于 `enabled/`。
+- 17 个自定义技能，位于 `skills/local/`。
+- 27 个 Lark/Feishu 第三方技能，来自 1 个 GitHub 仓库。
+- 共 44 个统一技能入口，位于 `enabled/`。
 
 第三方来源、对应仓库和官方安装命令见 [SOURCES.md](SOURCES.md)。该文件由脚本根据 `registry.json` 自动生成。
+
+## 当前维护策略
+
+本仓库把第三方领域能力和个人开发工作流明确分开：
+
+- Lark/Feishu 技能依赖官方 CLI、API 和持续更新的产品能力，因此保留 `larksuite/cli` 作为唯一第三方 submodule。
+- 通用开发流程不再聚合多个第三方技能套件，避免需求访谈、规划、实现、测试和评审规则重复触发。
+- 开发工作流由本仓库中的 `development-workflow` 自行维护，便于按照个人习惯持续调整，并保证不同 Agent 使用同一套执行原则。
+- 具体项目和领域能力继续放在 `skills/local/`，不会为了获得单个技能而引入一整套相互依赖的工作流。
+
+### `development-workflow`
+
+`skills/local/workflow/development-workflow/` 是统一的软件开发主流程，适用于功能开发、缺陷修复、重构、配置或文档修改、测试、代码评审和交付准备。
+
+它采用可按风险伸缩的流程：
+
+```text
+判断任务模式
+    ↓
+建立事实基线
+    ↓
+按复杂度决定是否规划
+    ↓
+建立任务类型对应的证据
+    ↓
+实施最小完整改动
+    ↓
+分层验证与交付前自审
+    ↓
+清晰交付
+```
+
+设计上不绑定 Claude、Codex 或其他平台的专用工具名，不强制所有任务创建计划文件，也不要求简单修改机械执行完整 TDD。其他本地领域技能可以补充专业规则，但不替代这条主流程。
 
 ## 工作原理
 
@@ -104,12 +137,10 @@ Skill-Library/
 │       ├── documentation/
 │       ├── frontend/
 │       ├── infrastructure/
-│       └── quality/
+│       ├── quality/
+│       └── workflow/
 ├── upstreams/                      # 第三方 Git submodules
-│   ├── addyosmani-agent-skills/
-│   ├── larksuite-cli/
-│   ├── planning-with-files/
-│   └── vercel-labs-skills/
+│   └── larksuite-cli/              # 唯一保留的第三方技能仓库
 ├── scripts/
 │   ├── bootstrap.sh                # 首次初始化和全局入口安装
 │   ├── lib.sh                      # 仓库定位和 macOS 代理检测
@@ -366,6 +397,10 @@ python3 scripts/skilllib.py verify
 这样旧的 `enabled/<skill-name>` 才会被清理或更新。
 
 ## 添加第三方 GitHub 技能仓库
+
+当前约定是：通用开发工作流优先在 `skills/local/` 自行维护，不再引入完整的第三方开发流程套件。只有技能依赖持续变化的外部产品、官方 CLI/API 或难以本地维护的专用资源时，才考虑增加新的第三方 submodule。
+
+添加前先确认它提供了现有本地技能无法替代的独特价值，并检查许可证、维护状态、权限要求和与现有技能的触发重叠。
 
 以下示例把 `https://github.com/example/skills.git` 添加到 `upstreams/example-skills`。
 

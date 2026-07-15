@@ -1,0 +1,4 @@
+interface:
+  display_name: "Development Workflow"
+  short_description: "面向功能、缺陷、重构和评审的跨 Agent 开发流程"
+  default_prompt: "Use $development-workflow to complete this codebase task with proportional planning, implementation, and verification."
