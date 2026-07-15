@@ -16,6 +16,7 @@ skilllib_use_macos_proxy
 git -C "$repo" submodule sync --recursive
 git -C "$repo" submodule update --init --recursive --depth 1
 git -C "$repo" submodule update --remote --merge --recursive
+python3 "$repo/scripts/skilllib.py" sources --repo "$repo"
 python3 "$repo/scripts/skilllib.py" build --repo "$repo"
 python3 "$repo/scripts/skilllib.py" verify --repo "$repo"
 python3 -m unittest discover -s "$repo/tests" -v

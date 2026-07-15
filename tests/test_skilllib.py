@@ -7,6 +7,7 @@ from scripts.skilllib import (
     RegistryError,
     build_links,
     install_global_links,
+    write_sources_md,
     verify_global_links,
     verify_repo,
 )
@@ -118,6 +119,19 @@ class SkillLibraryTests(unittest.TestCase):
         self.assertTrue((backup / ".agents/skills/old-skill").is_dir())
         self.assertTrue((backup / ".claude/skills/old-skill").is_dir())
         self.assertEqual(verify_global_links(self.repo, home=home), 2)
+
+    def test_sources_markdown_is_generated_from_registry(self):
+        registry = json.loads((self.repo / "registry.json").read_text())
+        registry["sources"][0]["title"] = "Example Skills"
+        registry["sources"][0]["installCommand"] = "npx skills add example/example -g"
+        self.write_registry(registry)
+
+        output = write_sources_md(self.repo)
+        text = output.read_text(encoding="utf-8")
+
+        self.assertIn("Example Skills", text)
+        self.assertIn("https://github.com/example/example", text)
+        self.assertIn("npx skills add example/example -g", text)
 
 
 if __name__ == "__main__":
