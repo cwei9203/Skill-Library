@@ -133,6 +133,16 @@ class SkillLibraryTests(unittest.TestCase):
         self.assertIn("https://github.com/example/example", text)
         self.assertIn("npx skills add example/example -g", text)
 
+    def test_update_checks_out_remote_submodule_commits_without_merging(self):
+        script = (Path(__file__).parents[1] / "scripts/update.sh").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn(
+            "submodule update --remote --checkout --recursive", script
+        )
+        self.assertNotIn("submodule update --remote --merge", script)
+
 
 if __name__ == "__main__":
     unittest.main()
