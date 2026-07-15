@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict
 
@@ -118,20 +120,81 @@ def verify_repo(repo: Path) -> list[str]:
     return sorted(actual)
 
 
+GLOBAL_SKILL_ROOTS = (Path(".agents/skills"), Path(".claude/skills"))
+
+
+def _next_backup_dir(repo: Path) -> Path:
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    root = repo / ".migration-backups" / stamp
+    suffix = 1
+    while root.exists():
+        root = repo / ".migration-backups" / f"{stamp}-{suffix}"
+        suffix += 1
+    return root
+
+
+def install_global_links(repo: Path, home: Path, migrate: bool) -> Path:
+    repo = repo.resolve()
+    home = home.expanduser().resolve()
+    verify_repo(repo)
+    enabled = (repo / "enabled").resolve()
+    targets = [(relative, home / relative) for relative in GLOBAL_SKILL_ROOTS]
+
+    for _, target in targets:
+        if target.is_symlink() and target.resolve() == enabled:
+            continue
+        if (target.exists() or target.is_symlink()) and not migrate:
+            raise RegistryError(
+                f"global skill directory exists: {target}; rerun with --migrate"
+            )
+
+    backup = _next_backup_dir(repo)
+    for relative, target in targets:
+        if target.is_symlink() and target.resolve() == enabled:
+            continue
+        if target.exists() or target.is_symlink():
+            backup_target = backup / relative
+            backup_target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(target), str(backup_target))
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.symlink_to(enabled, target_is_directory=True)
+    return backup
+
+
+def verify_global_links(repo: Path, home: Path) -> int:
+    enabled = (repo.resolve() / "enabled").resolve()
+    for relative in GLOBAL_SKILL_ROOTS:
+        target = home.expanduser().resolve() / relative
+        if not target.is_symlink():
+            raise RegistryError(f"global skill root is not a symlink: {target}")
+        if target.resolve() != enabled:
+            raise RegistryError(f"global skill root points elsewhere: {target}")
+    return len(GLOBAL_SKILL_ROOTS)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=("build", "verify"))
+    parser.add_argument(
+        "command", choices=("build", "verify", "install-global", "verify-global")
+    )
     parser.add_argument("--repo", type=Path, default=Path.cwd())
+    parser.add_argument("--home", type=Path, default=Path.home())
+    parser.add_argument("--migrate", action="store_true")
     args = parser.parse_args()
     try:
-        names = (
-            build_links(args.repo)
-            if args.command == "build"
-            else verify_repo(args.repo)
-        )
+        if args.command == "build":
+            result = len(build_links(args.repo))
+        elif args.command == "verify":
+            result = len(verify_repo(args.repo))
+        elif args.command == "install-global":
+            backup = install_global_links(args.repo, args.home, args.migrate)
+            result = verify_global_links(args.repo, args.home)
+            print(f"backup: {backup}")
+        else:
+            result = verify_global_links(args.repo, args.home)
     except RegistryError as error:
         parser.error(str(error))
-    print(f"{args.command}: {len(names)} skills")
+    print(f"{args.command}: {result}")
     return 0
 
 

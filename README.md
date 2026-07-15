@@ -20,6 +20,14 @@ cd Skill-Library
 ./scripts/bootstrap.sh
 ```
 
+已有全局技能目录时，首次迁移使用：
+
+```bash
+./scripts/bootstrap.sh --migrate
+```
+
+原目录会移动到仓库内被 Git 忽略的 `.migration-backups/`，确认运行正常后可自行删除。
+
 ## 更新
 
 ```bash
@@ -27,6 +35,8 @@ cd Skill-Library
 ```
 
 更新脚本只拉取上游、重建软链接并校验。GitHub Actions 会定期执行同一流程并创建更新 PR，不直接修改 `main`。
+
+macOS 如果启用了系统 HTTPS 代理，脚本会自动读取该代理供 Git 使用，不修改全局 Git 配置。
 
 ## 原则
 

@@ -3,7 +3,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.skilllib import RegistryError, build_links, verify_repo
+from scripts.skilllib import (
+    RegistryError,
+    build_links,
+    install_global_links,
+    verify_global_links,
+    verify_repo,
+)
 
 
 class SkillLibraryTests(unittest.TestCase):
@@ -83,6 +89,35 @@ class SkillLibraryTests(unittest.TestCase):
 
         with self.assertRaisesRegex(RegistryError, "broken"):
             verify_repo(self.repo)
+
+    def test_global_install_refuses_to_replace_existing_directories_by_default(self):
+        build_links(self.repo)
+        home = self.repo / "home"
+        existing = home / ".agents/skills"
+        existing.mkdir(parents=True)
+        (existing / "keep-me").mkdir()
+
+        with self.assertRaisesRegex(RegistryError, "--migrate"):
+            install_global_links(self.repo, home=home, migrate=False)
+
+        self.assertTrue((existing / "keep-me").is_dir())
+
+    def test_global_install_backs_up_existing_directories_and_links_enabled(self):
+        build_links(self.repo)
+        home = self.repo / "home"
+        for relative in (Path(".agents/skills"), Path(".claude/skills")):
+            existing = home / relative
+            existing.mkdir(parents=True)
+            (existing / "old-skill").mkdir()
+
+        backup = install_global_links(self.repo, home=home, migrate=True)
+
+        self.assertTrue((home / ".agents/skills").is_symlink())
+        self.assertTrue((home / ".claude/skills").is_symlink())
+        self.assertEqual((home / ".agents/skills").resolve(), (self.repo / "enabled").resolve())
+        self.assertTrue((backup / ".agents/skills/old-skill").is_dir())
+        self.assertTrue((backup / ".claude/skills/old-skill").is_dir())
+        self.assertEqual(verify_global_links(self.repo, home=home), 2)
 
 
 if __name__ == "__main__":
